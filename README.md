@@ -20,6 +20,7 @@ Org-level default community files + reusable workflows for the [f3d1 ecosystem](
 | `.github/workflows/security-typescript.yml` | Reusable: gitleaks + semgrep + npm audit |
 | `.github/workflows/scorecard.yml` | Reusable: OpenSSF Scorecard with SARIF upload |
 | `.github/workflows/release-please.yml` | Reusable: googleapis/release-please-action v5 (auto-bump + changelog PR) |
+| `.github/workflows/dependabot-automerge.yml` | Reusable: auto-merge Dependabot patch + minor bumps when CI green |
 | `configs/pre-commit-rust-py.yaml` | Shared pre-commit hooks for Rust+PyO3 repos |
 | `configs/pre-commit-python.yaml` | Shared pre-commit hooks for pure-Python repos |
 | `configs/pre-commit-typescript.yaml` | Shared pre-commit hooks for TS repos |
@@ -59,9 +60,6 @@ jobs:
 
 When this repo updates a SHA pin or adds a new tool to one of the reusable workflows, every consumer picks up the change at next CI run. Single source of truth.
 
-## Future additions (planned)
-
-- `.github/workflows/dependabot-automerge.yml` - auto-merge patch + minor Dependabot bumps when CI green (Phase 5; gated on TL approval)
 
 ## License
 

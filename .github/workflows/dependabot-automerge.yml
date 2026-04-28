@@ -1,0 +1,67 @@
+# Reusable Dependabot auto-merge.
+#
+# When Dependabot opens a PR, this workflow inspects the bump type and either:
+#   - Approves + auto-merges (squash) for patch and minor bumps
+#   - Sits and waits for human review on majors and security advisories
+#
+# Auto-merge requires the consumer repo to have "Allow auto-merge" enabled in
+# Settings -> General. CI must pass before the merge fires (the --auto flag
+# defers to required status checks). If a repo has no required checks, this
+# workflow merges immediately - keep that in mind when adding new repos.
+#
+# Caller pattern:
+#
+#   # .github/workflows/dependabot-automerge.yml in any consumer:
+#   name: dependabot-automerge
+#   on: pull_request_target
+#   permissions:
+#     contents: write
+#     pull-requests: write
+#   jobs:
+#     call:
+#       uses: smigolsmigol/.github/.github/workflows/dependabot-automerge.yml@main
+#       permissions:
+#         contents: write
+#         pull-requests: write
+
+name: dependabot-automerge (reusable)
+
+on:
+  workflow_call:
+
+jobs:
+  automerge:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Inspect Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98  # v3.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Approve + auto-merge patch and minor bumps
+        if: |
+          (steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+           steps.metadata.outputs.update-type == 'version-update:semver-minor') &&
+          steps.metadata.outputs.dependency-type != 'direct:production'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --auto --squash "$PR_URL"
+
+      - name: Approve + auto-merge production patch bumps only
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' &&
+          steps.metadata.outputs.dependency-type == 'direct:production'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --auto --squash "$PR_URL"
