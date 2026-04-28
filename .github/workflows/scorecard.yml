@@ -11,8 +11,6 @@ name: scorecard
 on:
   workflow_call: {}
 
-permissions: read-all
-
 jobs:
   analysis:
     name: scorecard
