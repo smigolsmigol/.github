@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+title: "f3d1 ecosystem: Rust runtime, dashboard, and supporting libraries for Python AI apps"
+message: "If you use f3d1 components in academic work, please cite."
+type: software
+authors:
+  - given-names: Federico
+    family-names: Benini
+    email: smigolsmigol@protonmail.com
+    affiliation: Independent
+url: "https://github.com/smigolsmigol"
+license: MIT
+keywords:
+  - LLM
+  - AI runtime
+  - calibration
+  - benchmarking
+  - Rust
+  - PyO3
