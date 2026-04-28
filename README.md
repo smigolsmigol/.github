@@ -19,6 +19,7 @@ Org-level default community files + reusable workflows for the [f3d1 ecosystem](
 | `.github/workflows/security-python.yml` | Reusable: gitleaks + semgrep + ruff + bandit + mypy + pip-audit |
 | `.github/workflows/security-typescript.yml` | Reusable: gitleaks + semgrep + npm audit |
 | `.github/workflows/scorecard.yml` | Reusable: OpenSSF Scorecard with SARIF upload |
+| `.github/workflows/release-please.yml` | Reusable: googleapis/release-please-action v5 (auto-bump + changelog PR) |
 | `configs/pre-commit-rust-py.yaml` | Shared pre-commit hooks for Rust+PyO3 repos |
 | `configs/pre-commit-python.yaml` | Shared pre-commit hooks for pure-Python repos |
 | `configs/pre-commit-typescript.yaml` | Shared pre-commit hooks for TS repos |
@@ -60,9 +61,7 @@ When this repo updates a SHA pin or adds a new tool to one of the reusable workf
 
 ## Future additions (planned)
 
-- `.github/workflows/release-please.yml` - reusable release automation (Phase 4)
-- `configs/pre-commit-{rust-py,python,typescript}.yaml` - shared pre-commit hooks (Phase 3)
-- `.github/workflows/dependabot-automerge.yml` - auto-merge patch + minor Dependabot bumps when CI green (Phase 5)
+- `.github/workflows/dependabot-automerge.yml` - auto-merge patch + minor Dependabot bumps when CI green (Phase 5; gated on TL approval)
 
 ## License
 
