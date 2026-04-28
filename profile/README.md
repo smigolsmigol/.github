@@ -1,6 +1,6 @@
-## hi, I'm Federico
+## f3d1
 
-Building f3d1 - Rust runtime + dashboard ecosystem for Python AI apps. Open source, MIT.
+Rust runtime + dashboard ecosystem for Python AI apps. Open source, MIT. Solo project by Federico Benini, building in public.
 
 ### currently shipping
 
@@ -8,7 +8,7 @@ Building f3d1 - Rust runtime + dashboard ecosystem for Python AI apps. Open sour
 - **[f3dx-bench](https://github.com/smigolsmigol/f3dx-bench)** - the first prod-traffic latency dashboard for LLMs. Real telemetry from f3dx + llmkit users who opt in. Live at [f3dx-bench.pages.dev](https://f3dx-bench.pages.dev).
 - **[llmkit](https://github.com/smigolsmigol/llmkit)** - hosted API gateway with budget enforcement + cost dashboards + MCP server. Live at [llmkit.sh](https://llmkit.sh).
 
-### the ecosystem
+### the f3d1 ecosystem
 
 | Repo | What |
 |---|---|
