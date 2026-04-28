@@ -1,0 +1,84 @@
+# Shared pre-commit config for f3d1 pure-Python repos (tracewright, pydantic-cal).
+#
+# Install in a consumer repo:
+#   curl -O https://raw.githubusercontent.com/smigolsmigol/.github/main/configs/pre-commit-python.yaml
+#   mv pre-commit-python.yaml .pre-commit-config.yaml
+#   pre-commit install
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.10
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0
+    hooks:
+      - id: mypy
+        args: [--ignore-missing-imports]
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.0
+    hooks:
+      - id: bandit
+        args: [-c, pyproject.toml]
+        additional_dependencies: ["bandit[toml]"]
+
+  - repo: https://github.com/trufflesecurity/trufflehog
+    rev: v3.85.0
+    hooks:
+      - id: trufflehog
+        name: trufflehog (secrets scan)
+        entry: trufflehog git file://. --since-commit HEAD --only-verified --fail
+        language: golang
+
+  - repo: local
+    hooks:
+      - id: banned-chars
+        name: banned-chars (em dash, smart quotes, arrows, ellipsis)
+        language: python
+        entry: python
+        args:
+          - -c
+          - |
+            import sys
+            BANNED = {"\u2014": "em dash -> -", "\u2013": "en dash -> -",
+                      "\u2192": "right arrow -> ->", "\u2190": "left arrow -> <-",
+                      "\u201c": "left smart quote -> ASCII",
+                      "\u201d": "right smart quote -> ASCII",
+                      "\u2018": "left smart apostrophe -> ASCII",
+                      "\u2019": "right smart apostrophe -> ASCII",
+                      "\u2026": "ellipsis -> ..."}
+            failed = False
+            for path in sys.argv[1:]:
+                try:
+                    text = open(path, encoding="utf-8").read()
+                except (OSError, UnicodeDecodeError):
+                    continue
+                for ch, hint in BANNED.items():
+                    if ch in text:
+                        for n, line in enumerate(text.splitlines(), 1):
+                            if ch in line:
+                                print(f"{path}:{n}: banned char U+{ord(ch):04X} ({hint})")
+                                failed = True
+                                break
+            if failed:
+                print()
+                print("Replace banned chars with ASCII before committing.")
+                sys.exit(1)
+        types_or: [text]
+        exclude: '^(\.claude/|\.venv/|node_modules/|tests/.*cassette.*)'

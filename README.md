@@ -19,6 +19,21 @@ Org-level default community files + reusable workflows for the [f3d1 ecosystem](
 | `.github/workflows/security-python.yml` | Reusable: gitleaks + semgrep + ruff + bandit + mypy + pip-audit |
 | `.github/workflows/security-typescript.yml` | Reusable: gitleaks + semgrep + npm audit |
 | `.github/workflows/scorecard.yml` | Reusable: OpenSSF Scorecard with SARIF upload |
+| `configs/pre-commit-rust-py.yaml` | Shared pre-commit hooks for Rust+PyO3 repos |
+| `configs/pre-commit-python.yaml` | Shared pre-commit hooks for pure-Python repos |
+| `configs/pre-commit-typescript.yaml` | Shared pre-commit hooks for TS repos |
+
+## Pre-commit framework
+
+Each consumer repo copies the matching config:
+
+```
+curl -O https://raw.githubusercontent.com/smigolsmigol/.github/main/configs/pre-commit-rust-py.yaml
+mv pre-commit-rust-py.yaml .pre-commit-config.yaml
+pre-commit install
+```
+
+The hooks: trailing-whitespace, end-of-file-fixer, check-yaml/toml/json, ruff (Python), rustfmt + cargo-check (Rust), biome (TS), bandit + mypy (Python-strict), trufflehog secrets scan, and a banned-chars check that blocks em dashes / smart quotes / arrows / ellipsis from reaching the repo. Codifies the "no AI tells in shipped artifacts" rule into a hook so it can never reach a consumer repo again.
 
 ## Override semantics
 
