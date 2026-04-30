@@ -24,16 +24,12 @@ Rust runtime + dashboard ecosystem for Python AI apps. Open source, MIT. Solo pr
 
 Four shipped pillars in `f3dx==0.0.19`, all real-API validated against OpenAI gpt-4o-mini, all reproducible from committed fixtures (`F3DX_BENCH_OFFLINE=1` for replay without an API key):
 
-- `f3dx.fast.CanonicalPrompt` — prefix-cache canonicalization. **91.1% OpenAI cache hit rate, 28.6% real input cost reduction** vs naive baseline (3-turn agentic loop head-to-head).
-- `f3dx.fast.SpecToolDispatcher` — speculative tool execution with threaded fire (Sutradhara streaming JSON parser, ICLR 2026 oral). **37% wall-clock cut** on a synthetic 3-tool agentic turn.
-- `f3dx.cache.cache_tool_call` — tool-result memoization with FileWitness / TTLWitness invalidation. **223x file Read, 111,415x gh CLI** (eliminates 702ms subprocess cost per cached call).
-- `f3dx.fast.budget_max_tokens` — token budget hinting from prior-turn observations. **94% headroom saved** on runaway-prone prompts.
+- `f3dx.fast.CanonicalPrompt` - prefix-cache canonicalization. **91.1% OpenAI cache hit rate, 28.6% real input cost reduction** vs naive baseline (3-turn agentic loop head-to-head).
+- `f3dx.fast.SpecToolDispatcher` - speculative tool execution with threaded fire (Sutradhara streaming JSON parser, ICLR 2026 oral). **37% wall-clock cut** on a synthetic 3-tool agentic turn.
+- `f3dx.cache.cache_tool_call` - tool-result memoization with FileWitness / TTLWitness invalidation. **223x file Read, 111,415x gh CLI** (eliminates 702ms subprocess cost per cached call).
+- `f3dx.fast.budget_max_tokens` - token budget hinting from prior-turn observations. **94% headroom saved** on runaway-prone prompts.
 
 `f3dx-cache` and `f3dx-router` consolidated into the f3dx wheel on the same date; old PyPI packages stay resolvable as deprecation shims for 4-6 months. New code uses `pip install f3dx[cache,router]` and imports from `f3dx.cache` / `f3dx.router`.
-
-### security advisories
-
-- [GHSA-g6fx-g2jr-hvmf](https://github.com/pydantic/logfire/security/advisories/GHSA-g6fx-g2jr-hvmf) - Logfire scrubber JSON-decode bypass (Apr 2026, credit accepted)
 
 ### contact
 
