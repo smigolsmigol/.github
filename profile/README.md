@@ -20,16 +20,11 @@ Rust runtime + dashboard ecosystem for Python AI apps. Open source, MIT. Solo pr
 | [keyguard](https://github.com/smigolsmigol/keyguard) | Security linter for open source projects. Finds and fixes what others only report. |
 | [.github](https://github.com/smigolsmigol/.github) | Org-level substrate: SECURITY/CODE_OF_CONDUCT/CONTRIBUTING + reusable security/scorecard/release-please/dependabot-automerge workflows. |
 
-### f3dx.fast inference acceleration (2026-04-30)
+### f3dx.fast (since 0.0.19, 2026-04-30)
 
-Four shipped pillars in `f3dx==0.0.19`, all real-API validated against OpenAI gpt-4o-mini, all reproducible from committed fixtures (`F3DX_BENCH_OFFLINE=1` for replay without an API key):
+Four primitives in the f3dx wheel that cut closed-API spend on long agentic loops. `CanonicalPrompt` keeps the static prefix bytes-identical so OpenAI's prefix cache fires from turn two onwards (we measure 91% hit rate and 28.6% input cost cut on a 3-turn loop vs the same workload built naively). `cache_tool_call` memoizes safe tools across the loop; a 50KB `Read` lands in 42us instead of 9.4ms, a `gh run list` cached at 30s TTL drops from 702ms to 6us. `budget_max_tokens` reads prior-turn observations and caps `max_tokens` at p99 + 20%; on runaway-prone prompts that's ~94% off the upper bound. `SpecToolDispatcher` runs side-effect-free tools as soon as their streamed arguments parse cleanly, in parallel with the rest of the response stream; on a synthetic 3-tool turn that drops 1.6s to 1.0s. The ICLR 2026 oral on this is arXiv:2510.04371.
 
-- `f3dx.fast.CanonicalPrompt` - prefix-cache canonicalization. **91.1% OpenAI cache hit rate, 28.6% real input cost reduction** vs naive baseline (3-turn agentic loop head-to-head).
-- `f3dx.fast.SpecToolDispatcher` - speculative tool execution with threaded fire (Sutradhara streaming JSON parser, ICLR 2026 oral). **37% wall-clock cut** on a synthetic 3-tool agentic turn.
-- `f3dx.cache.cache_tool_call` - tool-result memoization with FileWitness / TTLWitness invalidation. **223x file Read, 111,415x gh CLI** (eliminates 702ms subprocess cost per cached call).
-- `f3dx.fast.budget_max_tokens` - token budget hinting from prior-turn observations. **94% headroom saved** on runaway-prone prompts.
-
-`f3dx-cache` and `f3dx-router` consolidated into the f3dx wheel on the same date; old PyPI packages stay resolvable as deprecation shims for 4-6 months. New code uses `pip install f3dx[cache,router]` and imports from `f3dx.cache` / `f3dx.router`.
+f3dx-cache and f3dx-router used to be separate packages; folded into f3dx as workspace members on the same date. Old PyPI packages stay live as deprecation shims for a few months. New code: `pip install f3dx[cache,router]`.
 
 ### contact
 
